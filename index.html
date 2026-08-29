@@ -97,6 +97,73 @@ label { font-size:13px; color:var(--kaspi-gray); display:block; margin-bottom:6p
 .empty-state { text-align:center; color:var(--kaspi-gray); margin-top:40px; }
 h3 { font-size:15px; margin:18px 0 8px; }
 
+@font-face {
+  font-family: 'Helvetica Neue';
+  src: url('HelveticaNeue.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* ===== Госуслуги / Удостоверение ===== */
+.ud-title { text-align:center; font-size:22px; font-weight:400; margin:20px 16px 16px; font-family:'Helvetica Neue',Arial,sans-serif; color:#1a1a1a; }
+.gos-tabs { display:flex; margin:0 16px 16px; border-radius:10px; overflow:hidden; border:1px solid #ddd; background:#e8e8e8; }
+.gos-tab { flex:1; text-align:center; padding:12px 8px; font-size:16px; font-weight:400; color:#333; background:#e0e0e0; border:none; cursor:pointer; font-family:'Helvetica Neue',Arial,sans-serif; }
+.gos-tab.active { background:#fff; color:#1a1a1a; box-shadow:0 0 0 1px #ddd; }
+.gos-panels { position:relative; overflow:hidden; touch-action:pan-y; }
+.gos-panel { display:none; padding:0 16px 24px; min-height:50vh; }
+.gos-panel.active { display:block; }
+.ud-card-wrap { background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,.08); margin-bottom:20px; }
+.ud-card-front, .ud-card-back {
+  position:relative; padding:14px 16px; font-family:'Helvetica Neue',Arial,sans-serif; min-height:160px;
+  border:1px solid #d0dde8; background:linear-gradient(160deg,#e8f4fc 0%,#f5f9fc 40%,#eef6f0 100%);
+}
+.ud-card-front { border-radius:8px 8px 0 0; }
+.ud-card-back { border-radius:0 0 8px 8px; border-top:none; min-height:140px; }
+.ud-header { display:flex; justify-content:space-between; align-items:flex-start; font-size:9px; color:#1a4a7a; letter-spacing:.3px; margin-bottom:10px; line-height:1.3; }
+.ud-header .center { text-align:center; flex:1; }
+.ud-emblem { width:36px; height:36px; margin:0 auto 2px; display:block; }
+.ud-fields { display:flex; gap:12px; }
+.ud-photo-slot {
+  width:72px; height:90px; background:#c5e0f0; border-radius:4px; flex-shrink:0;
+  overflow:hidden; display:flex; align-items:center; justify-content:center;
+}
+.ud-photo-slot img { width:100%; height:100%; object-fit:cover; }
+.ud-fields-col { flex:1; font-size:11px; }
+.ud-label { color:#5a7a9a; font-size:9px; margin-bottom:1px; letter-spacing:.2px; }
+.ud-value { color:#1a1a1a; font-size:13px; font-weight:600; min-height:16px; margin-bottom:8px; font-family:'Helvetica Neue',Arial,sans-serif; }
+.ud-row2 { display:flex; gap:16px; }
+.ud-row2 > div { flex:1; }
+.ud-iin-row { margin-top:4px; }
+.ud-back-top { display:flex; gap:12px; align-items:flex-start; margin-bottom:10px; }
+.ud-chip { width:42px; height:32px; background:linear-gradient(135deg,#d4a84b,#b8860b); border-radius:4px; flex-shrink:0; }
+.ud-barcode { height:28px; background:repeating-linear-gradient(90deg,#1a1a1a 0 2px,transparent 2px 4px); width:120px; margin-bottom:6px; }
+.ud-mrz { font-family:monospace; font-size:10px; color:#333; letter-spacing:1px; line-height:1.4; margin-top:8px; overflow:hidden; white-space:nowrap; }
+.ud-btn-primary {
+  display:block; width:100%; padding:16px; border-radius:12px; border:none;
+  background:#0a3d7a; color:#fff; font-size:17px; font-weight:500; cursor:pointer;
+  font-family:'Helvetica Neue',Arial,sans-serif; margin-bottom:12px;
+}
+.ud-btn-outline {
+  display:block; width:100%; padding:14px; border-radius:12px;
+  border:1.5px solid #0a3d7a; background:#fff; color:#0a3d7a; font-size:17px;
+  font-weight:500; cursor:pointer; font-family:'Helvetica Neue',Arial,sans-serif;
+}
+.req-field { margin-bottom:18px; }
+.req-field input {
+  width:100%; border:none; border-bottom:1px solid #e0e0e0; padding:10px 0;
+  font-size:16px; background:transparent; font-family:'Helvetica Neue',Arial,sans-serif;
+  color:#1a1a1a; outline:none;
+}
+.req-field input::placeholder { color:#b0b0b0; font-size:15px; }
+.req-field input:focus { border-bottom-color:var(--kaspi-orange); }
+.req-photo-label { color:#b0b0b0; font-size:15px; margin-bottom:8px; display:block; }
+.req-photo-btn {
+  display:inline-block; padding:10px 18px; border:1px dashed #aaa; border-radius:8px;
+  color:#666; font-size:14px; cursor:pointer; background:#fafafa;
+}
+.req-photo-preview { width:90px; height:120px; object-fit:cover; border-radius:6px; margin-top:10px; display:none; border:1px solid #ddd; }
+.req-msg { margin-bottom:12px; }
+
 /* ===== PIN-код ===== */
 .pin-topbar { display:flex; justify-content:space-between; align-items:center; padding:18px 20px 0; }
 .pin-topbar button { background:none; border:none; cursor:pointer; padding:6px; display:flex; }
@@ -286,23 +353,100 @@ h3 { font-size:15px; margin:18px 0 8px; }
     <div class="content" id="travel-booked-content"></div>
   </div>
 
-  <!-- ===================== ГОСУСЛУГИ ===================== -->
+  <!-- ===================== ГОСУСЛУГИ / УДОСТОВЕРЕНИЕ ===================== -->
   <div class="screen" id="screen-gosuslugi">
     <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Госуслуги</h1></div>
-    <div class="content">
-      <div id="gosuslugi-result"></div>
-      <div class="card">
-        <label>Услуга</label>
-        <select id="gosuslugi-service">
-          <option>Проверка штрафов ПДД</option>
-          <option>Справка о несудимости</option>
-          <option>Регистрация ИП</option>
-          <option>Оплата налогов</option>
-          <option>Техосмотр</option>
-        </select>
-        <label>ИИН</label>
-        <input type="text" id="gosuslugi-iin" placeholder="123456789012">
-        <button class="btn" onclick="submitGosuslugi()">Проверить</button>
+    <div class="ud-title">Удостоверение личности</div>
+    <div class="gos-tabs">
+      <button type="button" class="gos-tab active" id="tab-doc" onclick="switchGosTab('doc')">Документ</button>
+      <button type="button" class="gos-tab" id="tab-req" onclick="switchGosTab('req')">Реквизиты</button>
+    </div>
+    <div class="gos-panels" id="gos-panels">
+      <div class="gos-panel active" id="panel-doc">
+        <div class="ud-card-wrap">
+          <div class="ud-card-front">
+            <div class="ud-header">
+              <div style="max-width:90px;">ҚАЗАҚСТАН РЕСПУБЛИКАСЫ<br>ЖЕКЕ КУӘЛІК</div>
+              <div class="center">
+                <svg class="ud-emblem" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#c9a227"/><circle cx="20" cy="20" r="14" fill="#1a5a9a"/><path d="M20 8l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z" fill="#c9a227"/></svg>
+              </div>
+              <div style="max-width:100px;text-align:right;">РЕСПУБЛИКА КАЗАХСТАН<br>УДОСТОВЕРЕНИЕ ЛИЧНОСТИ</div>
+            </div>
+            <div class="ud-fields">
+              <div class="ud-photo-slot" id="ud-photo-slot"></div>
+              <div class="ud-fields-col">
+                <div class="ud-label">ТЕГІ / ФАМИЛИЯ</div>
+                <div class="ud-value" id="ud-surname"></div>
+                <div class="ud-label">АТЫ / ИМЯ</div>
+                <div class="ud-value" id="ud-name"></div>
+                <div class="ud-label">ӘКЕСІНІҢ АТЫ / ОТЧЕСТВО</div>
+                <div class="ud-value" id="ud-patronymic"></div>
+                <div class="ud-row2">
+                  <div>
+                    <div class="ud-label">ТУҒАН КҮНІ / ДАТА РОЖДЕНИЯ</div>
+                    <div class="ud-value" id="ud-dob"></div>
+                  </div>
+                  <div>
+                    <div class="ud-label">ЖЫНЫСЫ / ПОЛ</div>
+                    <div class="ud-value">E</div>
+                  </div>
+                </div>
+                <div class="ud-iin-row">
+                  <div class="ud-label">ЖСН / ИИН</div>
+                  <div class="ud-value" id="ud-iin"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ud-card-back">
+            <div class="ud-back-top">
+              <div>
+                <div class="ud-barcode"></div>
+                <div style="font-size:9px;color:#1a4a7a;">ТУҒАН ЖЕРІ / МЕСТО РОЖДЕНИЯ</div>
+                <div class="ud-value" style="font-size:12px;">АҚТӨБЕ ОБЛЫСЫ</div>
+                <div style="font-size:9px;color:#1a4a7a;margin-top:4px;">ҰЛТЫ / НАЦИОНАЛЬНОСТЬ</div>
+                <div class="ud-value" style="font-size:12px;">ҚАЗАҚ</div>
+                <div style="font-size:9px;color:#1a4a7a;margin-top:4px;">АЗАМАТТЫҒЫ / ГРАЖДАНСТВО</div>
+                <div class="ud-value" style="font-size:12px;">ҚАЗАҚСТАН</div>
+              </div>
+              <div class="ud-chip"></div>
+            </div>
+            <div style="font-size:9px;color:#1a4a7a;">БЕРІЛГЕН КҮНІ – ҚОЛДАНЫЛУ МЕРЗІМІ / ДАТА ВЫДАЧИ – СРОК ДЕЙСТВИЯ</div>
+            <div class="ud-value" style="font-size:12px;">13.01.2025 – 12.01.2035</div>
+            <div style="font-size:9px;color:#1a4a7a;margin-top:4px;">БЕРГЕН ОРГАН / ОРГАН ВЫДАЧИ</div>
+            <div class="ud-value" style="font-size:12px;">ҚР ІІМ</div>
+            <div class="ud-mrz">&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+          </div>
+        </div>
+        <button type="button" class="ud-btn-primary" onclick="alert('Документ предъявлен (демо)')">Предъявить документ</button>
+        <button type="button" class="ud-btn-outline" onclick="alert('Документ отправлен (демо)')">Отправить документ</button>
+      </div>
+      <div class="gos-panel" id="panel-req">
+        <div id="req-message" class="req-msg"></div>
+        <div class="req-field">
+          <input type="text" id="req-surname" placeholder="фамилия" maxlength="10" autocomplete="off">
+        </div>
+        <div class="req-field">
+          <input type="text" id="req-name" placeholder="имя" maxlength="15" autocomplete="off">
+        </div>
+        <div class="req-field">
+          <input type="text" id="req-patronymic" placeholder="отчество" maxlength="15" autocomplete="off">
+        </div>
+        <div class="req-field">
+          <input type="text" id="req-dob" placeholder="дата рождения (00.00.0000)" maxlength="10" autocomplete="off">
+        </div>
+        <div class="req-field">
+          <input type="text" id="req-iin" placeholder="иин" maxlength="13" autocomplete="off" inputmode="numeric">
+        </div>
+        <div class="req-field">
+          <span class="req-photo-label">фото 3x4</span>
+          <label class="req-photo-btn">
+            Выбрать фото
+            <input type="file" id="req-photo" accept="image/*" style="display:none;" onchange="previewReqPhoto(this)">
+          </label>
+          <img class="req-photo-preview" id="req-photo-preview" alt="фото">
+        </div>
+        <button type="button" class="ud-btn-outline" style="margin-top:24px;" onclick="submitRequisites()">Отправить реквизиты</button>
       </div>
     </div>
   </div>
@@ -396,15 +540,38 @@ const TOURS = [
   { name: 'Шымкент — Анталья', price: 98000, dates: '20–27 сентября' }
 ];
 
+function canUseStorage() {
+  try {
+    const k = '__kaspi_test__';
+    localStorage.setItem(k, '1');
+    localStorage.removeItem(k);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+var HAS_STORAGE = canUseStorage();
+
 function loadDB() {
-  const raw = localStorage.getItem('kaspiDB');
-  if (raw) {
-    try { return JSON.parse(raw); } catch(e) { /* повреждённые данные — сброс */ }
+  if (HAS_STORAGE) {
+    try {
+      var raw = localStorage.getItem('kaspiDB');
+      if (raw) {
+        try { return JSON.parse(raw); } catch (e) {}
+      }
+    } catch (e) {}
   }
   return JSON.parse(JSON.stringify(DEFAULT_DB));
 }
-function saveDB() { localStorage.setItem('kaspiDB', JSON.stringify(DB)); }
-let DB = loadDB();
+function saveDB() {
+  if (!HAS_STORAGE) return;
+  try { localStorage.setItem('kaspiDB', JSON.stringify(DB)); } catch (e) {}
+}
+var DB = loadDB();
+
+/* PIN state — declared early to avoid TDZ */
+var pinEntered = '';
+var PIN_LENGTH = 4;
 
 /* ============== НАВИГАЦИЯ ============== */
 let currentPayService = null;
@@ -642,29 +809,104 @@ function bookTour(idx) {
   showScreen('travel-booked');
 }
 
-/* ============== ГОСУСЛУГИ ============== */
+/* ============== ГОСУСЛУГИ / УДОСТОВЕРЕНИЕ ============== */
+var gosData = { surname: '', name: '', patronymic: '', dob: '', iin: '', photoDataUrl: '' };
+var gosTab = 'doc';
+var touchStartX = 0;
+
 function renderGosuslugi() {
-  document.getElementById('gosuslugi-result').innerHTML = '';
-  document.getElementById('gosuslugi-iin').value = '';
+  switchGosTab(gosTab);
+  updateDocCard();
+  var msg = document.getElementById('req-message');
+  if (msg) msg.innerHTML = '';
 }
-function submitGosuslugi() {
-  const service = document.getElementById('gosuslugi-service').value;
-  const iin = document.getElementById('gosuslugi-iin').value;
-  const box = document.getElementById('gosuslugi-result');
-  if (!iin || iin.length < 6) { box.innerHTML = '<div class="error-box">Введите корректный ИИН.</div>'; return; }
-  box.innerHTML = `<div class="message-box">По запросу «${service}» для ИИН ${iin}: данные не найдены (демо-режим).</div>`;
+
+function switchGosTab(tab) {
+  gosTab = tab;
+  var tabDoc = document.getElementById('tab-doc');
+  var tabReq = document.getElementById('tab-req');
+  var panelDoc = document.getElementById('panel-doc');
+  var panelReq = document.getElementById('panel-req');
+  if (tabDoc) tabDoc.classList.toggle('active', tab === 'doc');
+  if (tabReq) tabReq.classList.toggle('active', tab === 'req');
+  if (panelDoc) panelDoc.classList.toggle('active', tab === 'doc');
+  if (panelReq) panelReq.classList.toggle('active', tab === 'req');
+}
+
+function updateDocCard() {
+  var el;
+  el = document.getElementById('ud-surname'); if (el) el.textContent = gosData.surname || '';
+  el = document.getElementById('ud-name'); if (el) el.textContent = gosData.name || '';
+  el = document.getElementById('ud-patronymic'); if (el) el.textContent = gosData.patronymic || '';
+  el = document.getElementById('ud-dob'); if (el) el.textContent = gosData.dob || '';
+  el = document.getElementById('ud-iin'); if (el) el.textContent = gosData.iin || '';
+  var slot = document.getElementById('ud-photo-slot');
+  if (slot) {
+    if (gosData.photoDataUrl) slot.innerHTML = '<img src="' + gosData.photoDataUrl + '" alt="фото">';
+    else slot.innerHTML = '';
+  }
+}
+
+function previewReqPhoto(input) {
+  var file = input.files && input.files[0];
+  var preview = document.getElementById('req-photo-preview');
+  if (!preview) return;
+  if (!file) {
+    preview.style.display = 'none';
+    preview.src = '';
+    return;
+  }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function submitRequisites() {
+  var surname = (document.getElementById('req-surname').value || '').trim();
+  var name = (document.getElementById('req-name').value || '').trim();
+  var patronymic = (document.getElementById('req-patronymic').value || '').trim();
+  var dob = (document.getElementById('req-dob').value || '').trim();
+  var iin = (document.getElementById('req-iin').value || '').trim();
+  var box = document.getElementById('req-message');
+  var preview = document.getElementById('req-photo-preview');
+
+  if (!surname) { box.innerHTML = '<div class="error-box">Введите фамилию (до 10 символов).</div>'; return; }
+  if (surname.length > 10) { box.innerHTML = '<div class="error-box">Фамилия — максимум 10 символов.</div>'; return; }
+  if (!name) { box.innerHTML = '<div class="error-box">Введите имя (до 15 символов).</div>'; return; }
+  if (name.length > 15) { box.innerHTML = '<div class="error-box">Имя — максимум 15 символов.</div>'; return; }
+  if (patronymic.length > 15) { box.innerHTML = '<div class="error-box">Отчество — максимум 15 символов.</div>'; return; }
+  if (!/^\d{2}\.\d{2}\.\d{4}$/.test(dob)) {
+    box.innerHTML = '<div class="error-box">Дата рождения в формате 00.00.0000</div>'; return;
+  }
+  if (!/^\d{11,13}$/.test(iin)) {
+    box.innerHTML = '<div class="error-box">ИИН — от 11 до 13 цифр.</div>'; return;
+  }
+
+  gosData.surname = surname;
+  gosData.name = name;
+  gosData.patronymic = patronymic;
+  gosData.dob = dob;
+  gosData.iin = iin;
+  if (preview && preview.src && preview.style.display !== 'none' && preview.src.indexOf('data:') === 0) {
+    gosData.photoDataUrl = preview.src;
+  } else {
+    gosData.photoDataUrl = '';
+  }
+
+  updateDocCard();
+  box.innerHTML = '<div class="message-box">Реквизиты успешно отправлены. Данные отображены во вкладке «Документ».</div>';
+  setTimeout(function() { switchGosTab('doc'); }, 600);
 }
 
 /* ============== ПИН-КОД ============== */
-let pinEntered = '';
-const PIN_LENGTH = 4;
-
 function pinPress(digit) {
   if (pinEntered.length >= PIN_LENGTH) return;
   pinEntered += digit;
   updatePinDots();
   if (pinEntered.length === PIN_LENGTH) {
-    // Любые 4 цифры считаются верным кодом — пускаем на главный экран
     setTimeout(unlockNow, 150);
   }
 }
@@ -680,8 +922,10 @@ function resetPin() {
 }
 
 function updatePinDots() {
-  const dots = document.querySelectorAll('#pin-dots .pin-dot');
-  dots.forEach((dot, i) => dot.classList.toggle('filled', i < pinEntered.length));
+  var dots = document.querySelectorAll('#pin-dots .pin-dot');
+  dots.forEach(function(dot, i) {
+    dot.classList.toggle('filled', i < pinEntered.length);
+  });
 }
 
 function unlockNow() {
@@ -689,11 +933,40 @@ function unlockNow() {
   showScreen('home');
 }
 
-/* ============== ВСТАВКА ИКОНОК В СТАТИЧНУЮ РАЗМЕТКУ ============== */
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-icon]').forEach(el => {
+/* ============== ВСТАВКА ИКОНОК + ИНИТ ФОРМ ============== */
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('[data-icon]').forEach(function(el) {
     el.innerHTML = ICONS[el.dataset.icon] || '';
   });
+
+  var dobInput = document.getElementById('req-dob');
+  if (dobInput) {
+    dobInput.addEventListener('input', function() {
+      var v = this.value.replace(/[^\d]/g, '').slice(0, 8);
+      if (v.length > 4) v = v.slice(0, 2) + '.' + v.slice(2, 4) + '.' + v.slice(4);
+      else if (v.length > 2) v = v.slice(0, 2) + '.' + v.slice(2);
+      this.value = v;
+    });
+  }
+  var iinInput = document.getElementById('req-iin');
+  if (iinInput) {
+    iinInput.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g, '').slice(0, 13);
+    });
+  }
+
+  var panels = document.getElementById('gos-panels');
+  if (panels) {
+    panels.addEventListener('touchstart', function(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    panels.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(dx) < 50) return;
+      if (dx > 0) switchGosTab('req');
+      else switchGosTab('doc');
+    }, { passive: true });
+  }
 });
 </script>
 </body>
