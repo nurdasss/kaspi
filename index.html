@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kaspi.kz — демо</title>
+<style>
+:root {
+  --kaspi-red: #ff3d00;
+  --kaspi-orange: #ff5722;
+  --kaspi-dark: #1a1a1a;
+  --kaspi-gray: #8a8a8a;
+  --kaspi-bg: #f2f2f2;
+  --kaspi-yellow: #ffd400;
+  --kaspi-green: #00a651;
+  --kaspi-blue: #1a73e8;
+  --kaspi-beige: #d8b382;
+  --radius: 14px;
+  --shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:"Helvetica Neue",Arial,sans-serif; background:var(--kaspi-bg); color:var(--kaspi-dark); }
+.phone { max-width:480px; margin:0 auto; min-height:100vh; background:#fff; position:relative; padding-bottom:24px; }
+.screen { display:none; }
+.screen.active { display:block; }
+
+.topbar { display:flex; align-items:center; gap:12px; padding:14px 16px; background:#fff; position:sticky; top:0; z-index:10; }
+.topbar .burger { color:var(--kaspi-orange); font-size:22px; background:none; border:none; cursor:pointer; }
+.searchbar { flex:1; display:flex; align-items:center; gap:8px; background:var(--kaspi-bg); border-radius:24px; padding:10px 16px; color:var(--kaspi-gray); }
+
+.promo-scroll { display:flex; gap:10px; overflow-x:auto; padding:12px 16px 4px; scrollbar-width:none; }
+.promo-scroll::-webkit-scrollbar { display:none; }
+.promo-card { min-width:230px; border-radius:var(--radius); padding:14px; color:#fff; position:relative; min-height:150px; cursor:pointer; border:none; text-align:left; font-family:inherit; }
+.promo-card.green { background:linear-gradient(135deg,#0aa14a,#045c2a); }
+.promo-card.yellow { background:var(--kaspi-yellow); color:#1a1a1a; }
+.promo-card.blue { background:linear-gradient(135deg,#1a73e8,#0d3f8a); }
+.promo-title { font-weight:700; font-size:15px; line-height:1.2; max-width:70%; }
+.promo-badge { display:inline-block; background:var(--kaspi-red); color:#fff; font-weight:800; font-size:16px; padding:4px 14px; border-radius:6px; margin-top:12px; }
+.promo-card.yellow .promo-badge { background:#1a1a1a; color:var(--kaspi-yellow); }
+.promo-tags { position:absolute; bottom:12px; left:14px; display:flex; gap:6px; }
+.promo-tags span { background:#1a1a1a; color:#fff; font-size:11px; font-weight:700; padding:3px 8px; border-radius:4px; }
+.promo-period { padding:6px 16px 0; color:var(--kaspi-gray); font-size:13px; }
+
+.menu-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px 4px; padding:20px 12px; border-bottom:8px solid var(--kaspi-bg); }
+.menu-item { display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; color:var(--kaspi-dark); font-size:12.5px; text-align:center; position:relative; background:none; border:none; cursor:pointer; font-family:inherit; }
+.menu-icon { width:52px; height:52px; border-radius:16px; background:#fff2ec; display:flex; align-items:center; justify-content:center; color:var(--kaspi-orange); }
+.new-badge { position:absolute; top:-4px; right:6px; background:var(--kaspi-red); color:#fff; font-size:9px; font-weight:800; padding:2px 5px; border-radius:6px; }
+
+.installments { padding:8px 16px; }
+.installment-row { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f0f0f0; cursor:pointer; background:none; border-left:none; border-right:none; border-top:none; width:100%; text-align:left; font-family:inherit; }
+.inst-badge { min-width:56px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:12px; flex-shrink:0; }
+.inst-badge.orange { background:var(--kaspi-orange); }
+.inst-badge.red { background:var(--kaspi-red); }
+.inst-badge.beige { background:var(--kaspi-beige); color:#1a1a1a; }
+.inst-title { font-weight:600; font-size:15px; }
+.inst-subtitle { color:var(--kaspi-gray); font-size:13px; }
+
+.page-header { display:flex; align-items:center; gap:12px; padding:16px; background:var(--kaspi-orange); color:#fff; position:sticky; top:0; z-index:10; }
+.page-header button.back { color:#fff; background:none; border:none; font-size:22px; display:flex; cursor:pointer; padding:0; }
+.page-header h1 { font-size:18px; margin:0; font-weight:700; flex:1; }
+.page-header .cart-link { position:relative; color:#fff; display:flex; background:none; border:none; cursor:pointer; }
+
+.content { padding:16px; }
+.card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:14px; }
+.balance-card { background:linear-gradient(135deg,#ff5722,#ff3d00); color:#fff; border-radius:var(--radius); padding:20px; margin-bottom:16px; }
+.balance-card .label { opacity:.85; font-size:13px; }
+.balance-card .amount { font-size:28px; font-weight:800; margin-top:4px; }
+
+.list-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #f0f0f0; cursor:pointer; background:none; border-left:none; border-right:none; border-top:none; width:100%; text-align:left; font-family:inherit; color:inherit; }
+.list-row:last-child { border-bottom:none; }
+.amount-pos { color:var(--kaspi-green); font-weight:700; }
+.amount-neg { color:var(--kaspi-red); font-weight:700; }
+
+.btn { display:block; background:var(--kaspi-orange); color:#fff; border:none; padding:14px 20px; border-radius:10px; font-size:15px; font-weight:700; cursor:pointer; text-align:center; width:100%; margin-bottom:12px; font-family:inherit; }
+.btn:active { opacity:.85; }
+.btn.secondary { background:#f0f0f0; color:var(--kaspi-dark); }
+
+input[type="text"], input[type="number"], select {
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid #ddd; font-size:15px; margin-bottom:12px; background:#fafafa; font-family:inherit;
+}
+label { font-size:13px; color:var(--kaspi-gray); display:block; margin-bottom:6px; }
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.service-tile { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 12px; text-align:center; color:var(--kaspi-dark); font-size:13px; font-weight:600; border:none; cursor:pointer; font-family:inherit; }
+.service-tile .menu-icon { margin:0 auto 10px; }
+
+.message-box { background:#e9f9ee; border:1px solid #b6e8c4; color:#146c2e; padding:12px 14px; border-radius:10px; margin-bottom:14px; font-size:14px; }
+.error-box { background:#fdeceb; border:1px solid #f3b7b0; color:#a3221a; padding:12px 14px; border-radius:10px; margin-bottom:14px; font-size:14px; }
+
+.qr-box { display:flex; justify-content:center; padding:30px 0; }
+.qr-code { padding:16px; background:#fff; border:2px solid var(--kaspi-orange); border-radius:16px; }
+
+.tour-card { background:#fff; border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:14px; }
+.tour-price { font-size:20px; font-weight:800; color:var(--kaspi-orange); margin:6px 0; }
+
+.cart-badge { position:absolute; top:-6px; right:-8px; background:#fff; color:var(--kaspi-red); border-radius:50%; width:18px; height:18px; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:800; }
+.empty-state { text-align:center; color:var(--kaspi-gray); margin-top:40px; }
+h3 { font-size:15px; margin:18px 0 8px; }
+</style>
+</head>
+<body>
+<div class="phone" id="phone">
+
+  <!-- ===================== ГЛАВНАЯ ===================== -->
+  <div class="screen active" id="screen-home">
+    <div class="topbar">
+      <button class="burger" onclick="alert('Меню (демо)')" data-icon="burger"></button>
+      <div class="searchbar"><span data-icon="search"></span> <span>Поиск по Kaspi.kz</span></div>
+    </div>
+
+    <div class="promo-scroll" id="promo-scroll"></div>
+    <div class="promo-period" id="promo-period"></div>
+
+    <div class="menu-grid">
+      <button class="menu-item" onclick="showScreen('qr')"><span class="menu-icon" data-icon="qr"></span><span>Kaspi QR</span></button>
+      <button class="menu-item" onclick="showScreen('bank')"><span class="menu-icon" data-icon="phone"></span><span>Мой Банк</span></button>
+      <button class="menu-item" onclick="showScreen('payments')"><span class="menu-icon" data-icon="receipt"></span><span>Платежи</span></button>
+      <button class="menu-item" onclick="showScreen('transfers')"><span class="menu-icon" data-icon="swap"></span><span>Переводы</span></button>
+      <button class="menu-item" onclick="showScreen('shop')"><span class="menu-icon" data-icon="cart"></span><span>Магазин</span></button>
+      <button class="menu-item" onclick="showScreen('promotions')"><span class="menu-icon" data-icon="gift"></span><span>Акции</span></button>
+      <button class="menu-item" onclick="showScreen('travel')"><span class="new-badge">NEW</span><span class="menu-icon" data-icon="suitcase"></span><span>Travel</span></button>
+      <button class="menu-item" onclick="showScreen('gosuslugi')"><span class="menu-icon" data-icon="gov"></span><span>Госуслуги</span></button>
+    </div>
+
+    <div class="installments" id="installments-list"></div>
+  </div>
+
+  <!-- ===================== KASPI QR ===================== -->
+  <div class="screen" id="screen-qr">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Kaspi QR</h1></div>
+    <div class="content">
+      <div class="card" style="text-align:center;">
+        <p>Покажите этот QR-код продавцу для оплаты</p>
+        <div class="qr-box"><div class="qr-code" id="qr-svg-holder"></div></div>
+        <p style="color:var(--kaspi-gray); font-size:13px;" id="qr-code-text"></p>
+      </div>
+      <button class="btn secondary" onclick="showScreen('home')">Готово</button>
+    </div>
+  </div>
+
+  <!-- ===================== МОЙ БАНК ===================== -->
+  <div class="screen" id="screen-bank">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Мой Банк</h1></div>
+    <div class="content">
+      <div class="balance-card">
+        <div class="label">Общий баланс</div>
+        <div class="amount" id="bank-balance"></div>
+        <div class="label" style="margin-top:10px;" id="bank-bonus"></div>
+      </div>
+      <h3>Мои карты</h3>
+      <div class="card" style="padding:0;" id="bank-cards"></div>
+      <h3>Последние операции</h3>
+      <div class="card" style="padding:0 16px;" id="bank-history"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ДЕТАЛИ КАРТЫ ===================== -->
+  <div class="screen" id="screen-card-detail">
+    <div class="page-header"><button class="back" onclick="showScreen('bank')" data-icon="back"></button><h1 id="card-detail-title">Карта</h1></div>
+    <div class="content" id="card-detail-content"></div>
+  </div>
+
+  <!-- ===================== ПЛАТЕЖИ ===================== -->
+  <div class="screen" id="screen-payments">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Платежи</h1></div>
+    <div class="content">
+      <p style="color:var(--kaspi-gray); margin-top:0;">Выберите категорию услуги</p>
+      <div class="grid-2" id="payments-services"></div>
+    </div>
+  </div>
+
+  <!-- ===================== ФОРМА ОПЛАТЫ ===================== -->
+  <div class="screen" id="screen-pay-form">
+    <div class="page-header"><button class="back" onclick="showScreen('payments')" data-icon="back"></button><h1 id="pay-form-title">Оплата</h1></div>
+    <div class="content">
+      <div id="pay-form-message"></div>
+      <div class="card">
+        <p style="margin-top:0; color:var(--kaspi-gray);" id="pay-form-balance"></p>
+        <label>Номер лицевого счёта / телефон</label>
+        <input type="text" id="pay-account" placeholder="Введите номер">
+        <label>Сумма оплаты, ₸</label>
+        <input type="number" id="pay-amount" placeholder="0" min="1">
+        <button class="btn" onclick="submitPayment()">Оплатить</button>
+      </div>
+      <button class="btn secondary" onclick="showScreen('payments')">К списку услуг</button>
+    </div>
+  </div>
+
+  <!-- ===================== ПЕРЕВОДЫ ===================== -->
+  <div class="screen" id="screen-transfers">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Переводы</h1></div>
+    <div class="content">
+      <div id="transfer-message"></div>
+      <p style="color:var(--kaspi-gray); margin-top:0;" id="transfer-balance"></p>
+      <div class="card">
+        <label>Получатель</label>
+        <select id="transfer-contact"></select>
+        <label>Сумма перевода, ₸</label>
+        <input type="number" id="transfer-amount" placeholder="0" min="1">
+        <button class="btn" onclick="submitTransfer()">Перевести</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== МАГАЗИН ===================== -->
+  <div class="screen" id="screen-shop">
+    <div class="page-header">
+      <button class="back" onclick="showScreen('home')" data-icon="back"></button>
+      <h1>Магазин</h1>
+      <button class="cart-link" onclick="showScreen('shop-cart')"><span data-icon="cart"></span><span class="cart-badge" id="cart-count" style="display:none;"></span></button>
+    </div>
+    <div class="content"><div class="grid-2" id="shop-catalog"></div></div>
+  </div>
+
+  <!-- ===================== КОРЗИНА ===================== -->
+  <div class="screen" id="screen-shop-cart">
+    <div class="page-header"><button class="back" onclick="showScreen('shop')" data-icon="back"></button><h1>Корзина</h1></div>
+    <div class="content" id="cart-content"></div>
+  </div>
+
+  <!-- ===================== АКЦИИ ===================== -->
+  <div class="screen" id="screen-promotions">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Акции</h1></div>
+    <div class="content">
+      <div id="promo-full-list"></div>
+      <h3>Рассрочки</h3>
+      <div class="card" style="padding:0 16px;" id="promo-installments"></div>
+    </div>
+  </div>
+
+  <!-- ===================== TRAVEL ===================== -->
+  <div class="screen" id="screen-travel">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Travel</h1></div>
+    <div class="content" id="travel-list"></div>
+  </div>
+
+  <!-- ===================== БРОНИРОВАНИЕ ===================== -->
+  <div class="screen" id="screen-travel-booked">
+    <div class="page-header"><button class="back" onclick="showScreen('travel')" data-icon="back"></button><h1>Бронирование</h1></div>
+    <div class="content" id="travel-booked-content"></div>
+  </div>
+
+  <!-- ===================== ГОСУСЛУГИ ===================== -->
+  <div class="screen" id="screen-gosuslugi">
+    <div class="page-header"><button class="back" onclick="showScreen('home')" data-icon="back"></button><h1>Госуслуги</h1></div>
+    <div class="content">
+      <div id="gosuslugi-result"></div>
+      <div class="card">
+        <label>Услуга</label>
+        <select id="gosuslugi-service">
+          <option>Проверка штрафов ПДД</option>
+          <option>Справка о несудимости</option>
+          <option>Регистрация ИП</option>
+          <option>Оплата налогов</option>
+          <option>Техосмотр</option>
+        </select>
+        <label>ИИН</label>
+        <input type="text" id="gosuslugi-iin" placeholder="123456789012">
+        <button class="btn" onclick="submitGosuslugi()">Проверить</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============== ИКОНКИ (SVG) ============== */
+const ICONS = {
+  qr: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM19 14h2v2h-2zM14 19h2v2h-2zM19 19h2v2h-2z" fill="currentColor" stroke="none"/></svg>',
+  phone: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2"/><line x1="10" y1="19" x2="14" y2="19"/></svg>',
+  receipt: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>',
+  swap: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',
+  cart: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+  gift: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="4"/><rect x="5" y="12" width="14" height="9"/><line x1="12" y1="8" x2="12" y2="21"/><path d="M12 8c-1.5-4-6-4-6-1s3 1 6 1zM12 8c1.5-4 6-4 6-1s-3 1-6 1z"/></svg>',
+  suitcase: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M8 7V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v3"/><line x1="2" y1="13" x2="22" y2="13"/></svg>',
+  gov: '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+  search: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+  burger: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+  back: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+  card: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>',
+  wifi: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+  home: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>',
+  book: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  star: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9.5 17 14.5 18.5 22 12 18 5.5 22 7 14.5 2 9.5 9 9"/></svg>'
+};
+
+/* ============== ФОРМАТИРОВАНИЕ ============== */
+function money(n) { return Math.round(n).toLocaleString('ru-RU') + ' ₸'; }
+
+/* ============== ДАННЫЕ (localStorage) ============== */
+const DEFAULT_DB = {
+  balance: 254300,
+  bonus: 12450,
+  cards: [
+    { name: 'Kaspi Gold', number: '•• 4417', balance: 254300 },
+    { name: 'Kaspi Red', number: '•• 8821', balance: 0, limit: 300000 }
+  ],
+  history: [
+    { date: '28 авг', title: 'Magnum', amount: -4560 },
+    { date: '27 авг', title: 'Зачисление зарплаты', amount: 320000 },
+    { date: '25 авг', title: 'Kcell', amount: -3200 }
+  ],
+  contacts: [
+    { name: 'Айгерим', phone: '+7 707 123 45 67' },
+    { name: 'Данияр', phone: '+7 701 555 22 11' },
+    { name: 'Мама', phone: '+7 702 999 88 77' }
+  ],
+  cart: [] // массив id товаров
+};
+
+const PROMOS = [
+  { title: 'Бытовая техника и электроника', badge: '0-0-24', period: '25 октября - 31 октября', color: 'green' },
+  { title: 'Компьютеры', badge: '10% Бонусов', period: '25 октября - 31 октября', color: 'yellow', tags: ['GOLD','RED'] },
+  { title: 'Товары для дома', badge: '0-0-18', period: '18 октября - 24 октября', color: 'blue' }
+];
+
+const INSTALLMENTS = [
+  { badge: '0·0·12', title: 'Рассрочка 0-0-12', subtitle: 'Детские товары', color: 'orange' },
+  { badge: 'RED', title: 'Kaspi Pay', subtitle: 'Рассрочка', color: 'red' },
+  { badge: '0·0·24', title: 'Рассрочка 0-0-24', subtitle: 'Все товары', color: 'orange' },
+  { badge: '', title: 'Kaspi Gold', subtitle: 'Для рефералов', color: 'beige' }
+];
+
+const PAYMENT_SERVICES = [
+  { name: 'Мобильная связь', icon: 'phone' },
+  { name: 'Интернет и ТВ', icon: 'wifi' },
+  { name: 'Коммунальные услуги', icon: 'home' },
+  { name: 'Штрафы и госпошлины', icon: 'gov' },
+  { name: 'Образование', icon: 'book' },
+  { name: 'Развлечения', icon: 'star' }
+];
+
+const CATALOG = [
+  { id: 1, name: 'Смартфон Galaxy A55', price: 189990, cat: 'Электроника' },
+  { id: 2, name: 'Телевизор 55" 4K', price: 249990, cat: 'Электроника' },
+  { id: 3, name: 'Ноутбук 15"', price: 349990, cat: 'Компьютеры' },
+  { id: 4, name: 'Наушники беспроводные', price: 24990, cat: 'Электроника' },
+  { id: 5, name: 'Кофеварка', price: 34990, cat: 'Дом' },
+  { id: 6, name: 'Робот-пылесос', price: 129990, cat: 'Дом' }
+];
+
+const TOURS = [
+  { name: 'Алматы — Стамбул', price: 145000, dates: '12–19 сентября' },
+  { name: 'Астана — Дубай', price: 210000, dates: '3–10 октября' },
+  { name: 'Шымкент — Анталья', price: 98000, dates: '20–27 сентября' }
+];
+
+function loadDB() {
+  const raw = localStorage.getItem('kaspiDB');
+  if (raw) {
+    try { return JSON.parse(raw); } catch(e) { /* повреждённые данные — сброс */ }
+  }
+  return JSON.parse(JSON.stringify(DEFAULT_DB));
+}
+function saveDB() { localStorage.setItem('kaspiDB', JSON.stringify(DB)); }
+let DB = loadDB();
+
+/* ============== НАВИГАЦИЯ ============== */
+let currentPayService = null;
+let currentCardIdx = null;
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  renderScreen(name);
+  window.scrollTo(0, 0);
+}
+
+function renderScreen(name) {
+  if (name === 'home') renderHome();
+  else if (name === 'qr') renderQr();
+  else if (name === 'bank') renderBank();
+  else if (name === 'payments') renderPayments();
+  else if (name === 'transfers') renderTransfers();
+  else if (name === 'shop') renderShop();
+  else if (name === 'shop-cart') renderCart();
+  else if (name === 'promotions') renderPromotions();
+  else if (name === 'travel') renderTravel();
+  else if (name === 'gosuslugi') renderGosuslugi();
+}
+
+/* ============== ГЛАВНАЯ ============== */
+function renderHome() {
+  const scroll = document.getElementById('promo-scroll');
+  scroll.innerHTML = PROMOS.map((p, i) => `
+    <button class="promo-card ${p.color}" onclick="showScreen('promotions')">
+      <div class="promo-title">${p.title}</div>
+      <div class="promo-badge">${p.badge}</div>
+      ${p.tags ? `<div class="promo-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
+    </button>
+  `).join('');
+  document.getElementById('promo-period').textContent = PROMOS[0].period;
+
+  const inst = document.getElementById('installments-list');
+  inst.innerHTML = INSTALLMENTS.map(it => `
+    <button class="installment-row" onclick="showScreen('promotions')">
+      <span class="inst-badge ${it.color}">${it.badge || ICONS.card}</span>
+      <span><div class="inst-title">${it.title}</div><div class="inst-subtitle">${it.subtitle}</div></span>
+    </button>
+  `).join('');
+}
+
+/* ============== KASPI QR ============== */
+function renderQr() {
+  const code = Array.from({length:12}, () => Math.floor(Math.random()*10)).join('');
+  document.getElementById('qr-code-text').textContent = 'Код операции: ' + code;
+  let rects = '';
+  for (let i=0;i<18;i++) for (let j=0;j<18;j++) {
+    if ((i*7+j*13+code.length) % 3 === 0) rects += `<rect x="${i*10}" y="${j*10}" width="10" height="10" fill="#1a1a1a"/>`;
+  }
+  document.getElementById('qr-svg-holder').innerHTML = `
+    <svg width="180" height="180" viewBox="0 0 180 180">
+      <rect width="180" height="180" fill="#fff"/>
+      ${rects}
+      <rect x="0" y="0" width="40" height="40" fill="none" stroke="#1a1a1a" stroke-width="6"/>
+      <rect x="140" y="0" width="40" height="40" fill="none" stroke="#1a1a1a" stroke-width="6"/>
+      <rect x="0" y="140" width="40" height="40" fill="none" stroke="#1a1a1a" stroke-width="6"/>
+    </svg>`;
+}
+
+/* ============== МОЙ БАНК ============== */
+function renderBank() {
+  document.getElementById('bank-balance').textContent = money(DB.balance);
+  document.getElementById('bank-bonus').textContent = 'Бонусы: ' + money(DB.bonus);
+  document.getElementById('bank-cards').innerHTML = DB.cards.map((c, i) => `
+    <button class="list-row" style="padding:14px 16px;" onclick="openCard(${i})">
+      <span><div class="inst-title">${c.name}</div><div class="inst-subtitle">${c.number}</div></span>
+      <span>${money(c.balance)}</span>
+    </button>
+  `).join('');
+  document.getElementById('bank-history').innerHTML = DB.history.map(h => `
+    <div class="list-row" style="cursor:default;">
+      <span><div class="inst-title">${h.title}</div><div class="inst-subtitle">${h.date}</div></span>
+      <span class="${h.amount > 0 ? 'amount-pos' : 'amount-neg'}">${h.amount > 0 ? '+' : ''}${money(h.amount)}</span>
+    </div>
+  `).join('');
+}
+
+function openCard(idx) {
+  currentCardIdx = idx;
+  const c = DB.cards[idx];
+  document.getElementById('card-detail-title').textContent = c.name;
+  document.getElementById('card-detail-content').innerHTML = `
+    <div class="balance-card">
+      <div class="label">${c.name} ${c.number}</div>
+      <div class="amount">${money(c.balance)}</div>
+      ${c.limit ? `<div class="label" style="margin-top:10px;">Лимит: ${money(c.limit)}</div>` : ''}
+    </div>
+    <button class="btn" onclick="showScreen('transfers')">Пополнить / перевести</button>
+    <button class="btn secondary" onclick="showScreen('bank')">Назад к списку карт</button>
+  `;
+  showScreen('card-detail');
+}
+
+/* ============== ПЛАТЕЖИ ============== */
+function renderPayments() {
+  document.getElementById('payments-services').innerHTML = PAYMENT_SERVICES.map(s => `
+    <button class="service-tile" onclick="openPayForm('${s.name}')">
+      <span class="menu-icon">${ICONS[s.icon]}</span><br>${s.name}
+    </button>
+  `).join('');
+}
+function openPayForm(serviceName) {
+  currentPayService = serviceName;
+  document.getElementById('pay-form-title').textContent = serviceName;
+  document.getElementById('pay-form-balance').textContent = 'Доступно: ' + money(DB.balance);
+  document.getElementById('pay-form-message').innerHTML = '';
+  document.getElementById('pay-account').value = '';
+  document.getElementById('pay-amount').value = '';
+  showScreen('pay-form');
+}
+function submitPayment() {
+  const amount = parseFloat(document.getElementById('pay-amount').value);
+  const box = document.getElementById('pay-form-message');
+  if (!amount || amount <= 0) { box.innerHTML = '<div class="error-box">Введите корректную сумму.</div>'; return; }
+  if (amount > DB.balance) { box.innerHTML = '<div class="error-box">Недостаточно средств.</div>'; return; }
+  DB.balance -= amount;
+  DB.history.unshift({ date: 'Сегодня', title: currentPayService, amount: -amount });
+  saveDB();
+  box.innerHTML = `<div class="message-box">Оплата «${currentPayService}» на ${money(amount)} выполнена.</div>`;
+  document.getElementById('pay-form-balance').textContent = 'Доступно: ' + money(DB.balance);
+  document.getElementById('pay-amount').value = '';
+}
+
+/* ============== ПЕРЕВОДЫ ============== */
+function renderTransfers() {
+  document.getElementById('transfer-balance').textContent = 'Доступно: ' + money(DB.balance);
+  document.getElementById('transfer-message').innerHTML = '';
+  const sel = document.getElementById('transfer-contact');
+  sel.innerHTML = DB.contacts.map(c => `<option value="${c.name}">${c.name} — ${c.phone}</option>`).join('')
+    + `<option value="Новый получатель">Новый номер телефона</option>`;
+  document.getElementById('transfer-amount').value = '';
+}
+function submitTransfer() {
+  const name = document.getElementById('transfer-contact').value;
+  const amount = parseFloat(document.getElementById('transfer-amount').value);
+  const box = document.getElementById('transfer-message');
+  if (!amount || amount <= 0) { box.innerHTML = '<div class="error-box">Введите корректную сумму.</div>'; return; }
+  if (amount > DB.balance) { box.innerHTML = '<div class="error-box">Недостаточно средств.</div>'; return; }
+  DB.balance -= amount;
+  DB.history.unshift({ date: 'Сегодня', title: 'Перевод: ' + name, amount: -amount });
+  saveDB();
+  box.innerHTML = `<div class="message-box">Перевод ${money(amount)} пользователю ${name} выполнен.</div>`;
+  document.getElementById('transfer-balance').textContent = 'Доступно: ' + money(DB.balance);
+  document.getElementById('transfer-amount').value = '';
+}
+
+/* ============== МАГАЗИН ============== */
+function renderShop() {
+  document.getElementById('shop-catalog').innerHTML = CATALOG.map(item => `
+    <div class="service-tile" style="text-align:left;">
+      <div style="font-weight:700; margin-bottom:6px;">${item.name}</div>
+      <div style="color:var(--kaspi-gray); font-size:12px; margin-bottom:8px;">${item.cat}</div>
+      <div style="color:var(--kaspi-orange); font-weight:800; margin-bottom:10px;">${money(item.price)}</div>
+      <button class="btn" style="padding:8px; font-size:13px;" onclick="addToCart(${item.id})">В корзину</button>
+    </div>
+  `).join('');
+  updateCartBadge();
+}
+function addToCart(id) {
+  DB.cart.push(id);
+  saveDB();
+  updateCartBadge();
+}
+function updateCartBadge() {
+  const badge = document.getElementById('cart-count');
+  if (DB.cart.length > 0) { badge.style.display = 'flex'; badge.textContent = DB.cart.length; }
+  else { badge.style.display = 'none'; }
+}
+function renderCart() {
+  const items = DB.cart.map(id => CATALOG.find(p => p.id === id)).filter(Boolean);
+  const total = items.reduce((s, i) => s + i.price, 0);
+  const el = document.getElementById('cart-content');
+  if (items.length === 0) {
+    el.innerHTML = `<p class="empty-state">Корзина пуста</p><button class="btn" onclick="showScreen('shop')">Перейти в магазин</button>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="card" style="padding:0 16px;">
+      ${items.map(i => `<div class="list-row" style="cursor:default;"><span>${i.name}</span><span>${money(i.price)}</span></div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="list-row" style="border:none; font-weight:800; font-size:17px; cursor:default;"><span>Итого</span><span>${money(total)}</span></div>
+    </div>
+    <button class="btn" onclick="showScreen('home')">Оформить в рассрочку</button>
+    <button class="btn secondary" onclick="clearCart()">Очистить корзину</button>
+  `;
+}
+function clearCart() { DB.cart = []; saveDB(); renderCart(); }
+
+/* ============== АКЦИИ ============== */
+function renderPromotions() {
+  document.getElementById('promo-full-list').innerHTML = PROMOS.map(p => `
+    <div class="promo-card ${p.color}" style="margin-bottom:6px; min-width:auto; cursor:default;">
+      <div class="promo-title">${p.title}</div>
+      <div class="promo-badge">${p.badge}</div>
+      ${p.tags ? `<div class="promo-tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>` : ''}
+    </div>
+    <p style="color:var(--kaspi-gray); font-size:13px; margin:4px 0 14px;">${p.period}</p>
+  `).join('');
+  document.getElementById('promo-installments').innerHTML = INSTALLMENTS.map(it => `
+    <div class="list-row" style="cursor:default;">
+      <span class="inst-badge ${it.color}">${it.badge || ICONS.card}</span>
+      <span style="margin-left:12px;"><div class="inst-title">${it.title}</div><div class="inst-subtitle">${it.subtitle}</div></span>
+    </div>
+  `).join('');
+}
+
+/* ============== TRAVEL ============== */
+function renderTravel() {
+  document.getElementById('travel-list').innerHTML = TOURS.map((t, i) => `
+    <div class="tour-card">
+      <div style="font-weight:700; font-size:16px;">${t.name}</div>
+      <div style="color:var(--kaspi-gray); font-size:13px; margin:4px 0;">${t.dates}</div>
+      <div class="tour-price">${money(t.price)}</div>
+      <button class="btn" onclick="bookTour(${i})">Забронировать</button>
+    </div>
+  `).join('');
+}
+function bookTour(idx) {
+  const t = TOURS[idx];
+  document.getElementById('travel-booked-content').innerHTML = `
+    <div class="message-box">Тур успешно забронирован!</div>
+    <div class="tour-card">
+      <div style="font-weight:700; font-size:16px;">${t.name}</div>
+      <div style="color:var(--kaspi-gray); font-size:13px; margin:4px 0;">${t.dates}</div>
+      <div class="tour-price">${money(t.price)}</div>
+    </div>
+    <button class="btn" onclick="showScreen('home')">На главную</button>
+  `;
+  showScreen('travel-booked');
+}
+
+/* ============== ГОСУСЛУГИ ============== */
+function renderGosuslugi() {
+  document.getElementById('gosuslugi-result').innerHTML = '';
+  document.getElementById('gosuslugi-iin').value = '';
+}
+function submitGosuslugi() {
+  const service = document.getElementById('gosuslugi-service').value;
+  const iin = document.getElementById('gosuslugi-iin').value;
+  const box = document.getElementById('gosuslugi-result');
+  if (!iin || iin.length < 6) { box.innerHTML = '<div class="error-box">Введите корректный ИИН.</div>'; return; }
+  box.innerHTML = `<div class="message-box">По запросу «${service}» для ИИН ${iin}: данные не найдены (демо-режим).</div>`;
+}
+
+/* ============== ВСТАВКА ИКОНОК В СТАТИЧНУЮ РАЗМЕТКУ ============== */
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('[data-icon]').forEach(el => {
+    el.innerHTML = ICONS[el.dataset.icon] || '';
+  });
+  renderHome();
+});
+</script>
+</body>
+</html>
